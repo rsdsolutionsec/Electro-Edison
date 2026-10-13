@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { StatusBadge } from '@/components/ui/status-badge'
-import { FolderKanban, Plus, Search, Calendar, AlertTriangle } from 'lucide-react'
+import { FolderKanban, Plus, Search, Calendar, AlertTriangle, HardHat } from 'lucide-react'
 
 export default async function ProyectosPage({
   searchParams,
@@ -31,6 +31,15 @@ export default async function ProyectosPage({
       project_stages (
         id,
         status
+      ),
+      project_technicians (
+        id,
+        role,
+        technicians (
+          id,
+          full_name,
+          specialty
+        )
       )
     `)
     .order('created_at', { ascending: false })
@@ -122,6 +131,7 @@ export default async function ProyectosPage({
                     <th className="px-6 py-3.5">Código</th>
                     <th className="px-6 py-3.5">Proyecto</th>
                     <th className="px-6 py-3.5">Cliente</th>
+                    <th className="px-6 py-3.5">Cuadrilla</th>
                     <th className="px-6 py-3.5">Estado</th>
                     <th className="px-6 py-3.5">Prioridad</th>
                     <th className="px-6 py-3.5">Avance Etapas</th>
@@ -132,6 +142,7 @@ export default async function ProyectosPage({
                 <tbody className="divide-y divide-slate-100">
                   {projects.map((p: any) => {
                     const clientData = p.clients as any
+                    const crew = p.project_technicians || []
                     const stages = p.project_stages || []
                     const totalStages = stages.length
                     const completedStages = stages.filter((s: any) => s.status === 'completed').length
@@ -169,6 +180,26 @@ export default async function ProyectosPage({
                             </Link>
                           ) : (
                             'Cliente no asignado'
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
+                          {crew.length > 0 ? (
+                            <div className="flex flex-wrap gap-1 max-w-[190px]">
+                              {crew.map((c: any) => (
+                                <span
+                                  key={c.id}
+                                  className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-700 border border-slate-200"
+                                  title={`${c.technicians?.full_name || 'Técnico'} (${c.role === 'lead' ? 'Líder' : c.role === 'assistant' ? 'Ayudante' : 'Técnico'})`}
+                                >
+                                  <HardHat className="h-2.5 w-2.5 text-blue-600" />
+                                  {c.technicians?.full_name
+                                    ? `${c.technicians.full_name.split(' ')[0]} ${c.technicians.full_name.split(' ')[1]?.[0] || ''}.`
+                                    : 'Técnico'}
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="text-[11px] text-slate-400 italic">Sin cuadrilla</span>
                           )}
                         </td>
                         <td className="px-6 py-4">

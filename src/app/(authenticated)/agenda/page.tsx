@@ -69,19 +69,30 @@ export default async function AgendaPage() {
     .not('status', 'in', '("completed","cancelled")')
     .order('created_at', { ascending: false })
 
-  // 3. Perfiles activos para cuadrilla
-  const { data: technicians } = await supabase
+  // 3. Catálogo de técnicos de campo para asignar a visitas
+  const { data: techList } = await supabase
+    .from('technicians')
+    .select('id, full_name, specialty')
+    .eq('is_active', true)
+    .order('full_name', { ascending: true })
+
+  const { data: profilesList } = await supabase
     .from('profiles')
     .select('id, full_name')
     .eq('is_active', true)
     .order('full_name', { ascending: true })
+
+  // Presentar todos los electricistas disponibles
+  const combinedTechs = (techList && techList.length > 0)
+    ? techList.map((t) => ({ id: t.id, full_name: `${t.full_name} — ${t.specialty}` }))
+    : (profilesList || [])
 
   return (
     <div className="space-y-6">
       <AgendaView
         initialVisits={(visits || []) as any[]}
         workOrders={(rawWorkOrders || []) as any[]}
-        technicians={technicians || []}
+        technicians={combinedTechs}
       />
     </div>
   )

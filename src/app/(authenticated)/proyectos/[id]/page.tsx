@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { EtapasSection } from './etapas-section'
+import { ProjectCrewSection } from './project-crew-section'
 import {
   ArrowLeft,
   Calendar,
@@ -76,6 +77,8 @@ export default async function ProyectoDetallePage({
     { data: stages },
     { data: deliveries },
     { data: activityLogs },
+    { data: projectCrew },
+    { data: allTechnicians },
   ] = await Promise.all([
     supabase
       .from('quotations')
@@ -120,6 +123,30 @@ export default async function ProyectoDetallePage({
       .eq('project_id', projectId)
       .order('created_at', { ascending: false })
       .limit(10),
+    supabase
+      .from('project_technicians')
+      .select(`
+        id,
+        role,
+        assigned_at,
+        notes,
+        technician:technicians (
+          id,
+          full_name,
+          phone,
+          email,
+          specialty,
+          category,
+          status
+        )
+      `)
+      .eq('project_id', projectId)
+      .order('assigned_at', { ascending: true }),
+    supabase
+      .from('technicians')
+      .select('id, full_name, specialty, category, phone')
+      .eq('is_active', true)
+      .order('full_name', { ascending: true }),
   ])
 
   const clientData = project.clients as any
@@ -225,6 +252,13 @@ export default async function ProyectoDetallePage({
           </CardContent>
         </Card>
       )}
+
+      {/* Cuadrilla de Técnicos Asignados al Proyecto */}
+      <ProjectCrewSection
+        projectId={projectId}
+        assignedCrew={(projectCrew || []) as any[]}
+        allTechnicians={(allTechnicians || []) as any[]}
+      />
 
       {/* Sección 1: Cotizaciones Asociadas y Versiones */}
       <Card>

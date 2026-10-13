@@ -56,6 +56,8 @@ La base de datos se estructura en dos esquemas bien diferenciados para mitigar r
 | `work_order_technicians`| Sí| **SÍ** | Bloqueado (0 filas) | Solo sus asignaciones | Gestión de cuadrillas |
 | `agenda_visits` | Sí | **SÍ** | Bloqueado (0 filas) | Solo visitas asignadas | Programación y reasignación |
 | `visit_technicians`| Sí | **SÍ** | Bloqueado (0 filas) | Solo sus asignaciones | Gestión de técnicos en cita |
+| `technicians` | 6 | **SÍ** | Bloqueado (0 filas) | Lectura general | Creación y gestión completa |
+| `project_technicians`| 7+ | **SÍ** | Bloqueado (0 filas) | Lectura asignados | Asignación y gestión de cuadrilla |
 | `payments` | Sí | **SÍ** | Bloqueado (0 filas) | Sin acceso | Registro de abonos/facturas |
 | `activity_logs` | Sí | **SÍ** | Bloqueado (0 filas) | Sin acceso | Solo lectura administradores |
 

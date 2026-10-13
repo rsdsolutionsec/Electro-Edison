@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -554,6 +554,58 @@ export type Database = {
           },
         ]
       }
+      project_technicians: {
+        Row: {
+          assigned_at: string
+          assigned_by: string | null
+          id: string
+          notes: string | null
+          project_id: string
+          role: string
+          technician_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          assigned_by?: string | null
+          id?: string
+          notes?: string | null
+          project_id: string
+          role?: string
+          technician_id: string
+        }
+        Update: {
+          assigned_at?: string
+          assigned_by?: string | null
+          id?: string
+          notes?: string | null
+          project_id?: string
+          role?: string
+          technician_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_technicians_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_technicians_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_technicians_technician_id_fkey"
+            columns: ["technician_id"]
+            isOneToOne: false
+            referencedRelation: "technicians"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       projects: {
         Row: {
           client_id: string
@@ -943,6 +995,62 @@ export type Database = {
         }
         Relationships: []
       }
+      technicians: {
+        Row: {
+          category: string
+          created_at: string
+          email: string | null
+          full_name: string
+          id: string
+          identification: string | null
+          is_active: boolean
+          notes: string | null
+          phone: string | null
+          specialty: string
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          email?: string | null
+          full_name: string
+          id?: string
+          identification?: string | null
+          is_active?: boolean
+          notes?: string | null
+          phone?: string | null
+          specialty?: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          identification?: string | null
+          is_active?: boolean
+          notes?: string | null
+          phone?: string | null
+          specialty?: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "technicians_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -987,21 +1095,24 @@ export type Database = {
           assigned_at: string
           assigned_by: string | null
           id: string
-          user_id: string
+          technician_id: string | null
+          user_id: string | null
           visit_id: string
         }
         Insert: {
           assigned_at?: string
           assigned_by?: string | null
           id?: string
-          user_id: string
+          technician_id?: string | null
+          user_id?: string | null
           visit_id: string
         }
         Update: {
           assigned_at?: string
           assigned_by?: string | null
           id?: string
-          user_id?: string
+          technician_id?: string | null
+          user_id?: string | null
           visit_id?: string
         }
         Relationships: [
@@ -1010,6 +1121,13 @@ export type Database = {
             columns: ["assigned_by"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visit_technicians_technician_id_fkey"
+            columns: ["technician_id"]
+            isOneToOne: false
+            referencedRelation: "technicians"
             referencedColumns: ["id"]
           },
           {
@@ -1094,7 +1212,8 @@ export type Database = {
           assigned_by: string | null
           assignment_role: string
           id: string
-          user_id: string
+          technician_id: string | null
+          user_id: string | null
           work_order_id: string
         }
         Insert: {
@@ -1102,7 +1221,8 @@ export type Database = {
           assigned_by?: string | null
           assignment_role?: string
           id?: string
-          user_id: string
+          technician_id?: string | null
+          user_id?: string | null
           work_order_id: string
         }
         Update: {
@@ -1110,7 +1230,8 @@ export type Database = {
           assigned_by?: string | null
           assignment_role?: string
           id?: string
-          user_id?: string
+          technician_id?: string | null
+          user_id?: string | null
           work_order_id?: string
         }
         Relationships: [
@@ -1119,6 +1240,13 @@ export type Database = {
             columns: ["assigned_by"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_order_technicians_technician_id_fkey"
+            columns: ["technician_id"]
+            isOneToOne: false
+            referencedRelation: "technicians"
             referencedColumns: ["id"]
           },
           {

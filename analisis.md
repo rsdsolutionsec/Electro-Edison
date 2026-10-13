@@ -257,6 +257,33 @@ Un electricista que está sobre una escalera, en una zanja o dentro de un cuarto
 
 ---
 
+### MÓDULO 8.1: Catálogo de Técnicos y Asignación de Cuadrillas a Proyectos
+
+#### Vistas y Rutas:
+- `/tecnicos`: Directorio central de técnicos de campo, cuadrillas operativas y asignación a obras.
+- `/proyectos/[id]`: Sección integrada **"Cuadrilla de Técnicos Asignados"** para vinculación N a N de personal a cada obra.
+
+#### Opciones y Componentes Clave:
+1. **Catálogo de Electricistas sin Dependencia de Cuentas Auth:**
+   - Permite registrar a todo el personal técnico de faena (nombre, cédula, teléfono con enlace WhatsApp, email, especialidad, categoría [Líder, Técnico, Ayudante] y estado de disponibilidad).
+   - No requiere crear credenciales de inicio de sesión para cada ayudante o instalador, agilizando el control del personal de campo.
+2. **Asignación Flexible de Cuadrillas a Proyectos (`project_technicians`):**
+   - En cada proyecto, el coordinador puede asociar 1 o más técnicos definiendo su rol específico en la obra (*Líder de Cuadrilla*, *Técnico Instalador*, *Ayudante Eléctrico*).
+   - Visualización instantánea de contacto (llamada directa y WhatsApp) y notas de asignación.
+3. **Reflejo en Toda la Plataforma:**
+   - En la lista de proyectos (`/proyectos`), cada fila muestra visualmente los badges de los electricistas que conforman su cuadrilla.
+   - En la agenda de visitas (`/agenda`), el coordinador cuenta con el catálogo completo de técnicos para despachar cuadrillas a servicios específicos.
+
+#### ¿Por qué lo tiene?
+En las empresas de ingeniería eléctrica, la mano de obra rota con frecuencia y muchas veces está compuesta por ayudantes o contratistas que no necesitan ingresar al software, pero la dirección y el coordinador de obra sí necesitan saber con exactitud quiénes están trabajando en cada subestación, tablero o instalación.
+
+#### ¿Para qué lo tiene?
+- Saber en tiempo real quién es el líder responsable en sitio y quiénes son los operarios de cada obra.
+- Contactar inmediatamente por WhatsApp o llamada a cualquier electricista asignado ante imprevistos técnicos.
+- Controlar la disponibilidad de la plantilla para no sobreasignar técnicos que ya están en faenas críticas.
+
+---
+
 ### MÓDULO 9: Administración de Usuarios y Roles
 
 #### Vistas y Rutas:

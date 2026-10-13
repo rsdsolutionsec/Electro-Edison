@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   Settings,
   Zap,
+  HardHat,
 } from 'lucide-react'
 
 interface NavItem {
@@ -41,6 +42,12 @@ const NAV_ITEMS: NavItem[] = [
     name: 'Proyectos',
     href: '/proyectos',
     icon: FolderKanban,
+    allowedRoles: ['admin', 'operations'],
+  },
+  {
+    name: 'Técnicos y Cuadrillas',
+    href: '/tecnicos',
+    icon: HardHat,
     allowedRoles: ['admin', 'operations'],
   },
   {
