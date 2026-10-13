@@ -38,7 +38,7 @@ export default async function AgendaPage() {
       visit_technicians (
         id,
         user_id,
-        profiles (
+        profiles!visit_technicians_user_id_fkey (
           id,
           full_name
         )

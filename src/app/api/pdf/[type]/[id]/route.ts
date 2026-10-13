@@ -167,7 +167,7 @@ export async function GET(
         work_order_technicians (
           id,
           assignment_role,
-          profiles (
+          profiles!work_order_technicians_user_id_fkey (
             id,
             full_name
           )

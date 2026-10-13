@@ -51,7 +51,7 @@ export default async function ProyectoDetallePage({
           city,
           reference
         ),
-        profiles (
+        responsible:profiles!projects_responsible_user_id_fkey (
           id,
           full_name
         )
@@ -70,7 +70,7 @@ export default async function ProyectoDetallePage({
         work_order_technicians (
           id,
           assignment_role,
-          profiles (
+          profiles!work_order_technicians_user_id_fkey (
             id,
             full_name
           )
@@ -109,7 +109,7 @@ export default async function ProyectoDetallePage({
 
   const clientData = project.clients as any
   const locationData = project.client_locations as any
-  const responsible = project.profiles as any
+  const responsible = (project as any).responsible || (project as any).profiles
   const primaryWorkOrder = workOrders?.[0]
 
   return (

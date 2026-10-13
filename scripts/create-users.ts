@@ -67,7 +67,7 @@ async function main() {
 
       userId = createData.user.id
       console.log(`✓ Usuario Auth creado exitosamente (ID: ${userId})`)
-    } else {
+    } else if (userId) {
       console.log(`ℹ El usuario ya existe en Auth (ID: ${userId}), actualizando password y metadatos...`)
       await supabase.auth.admin.updateUserById(userId, {
         password: item.password,

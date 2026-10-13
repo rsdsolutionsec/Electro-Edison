@@ -16,7 +16,7 @@ export default async function UsuariosPage() {
       phone,
       is_active,
       created_at,
-      user_roles (
+      user_roles!user_roles_user_id_fkey (
         role
       )
     `)

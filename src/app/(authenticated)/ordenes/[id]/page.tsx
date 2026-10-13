@@ -67,7 +67,7 @@ export default async function OrdenTrabajoDetallePage({
         user_id,
         assignment_role,
         assigned_at,
-        profiles (
+        profiles!work_order_technicians_user_id_fkey (
           id,
           full_name,
           phone
@@ -84,7 +84,7 @@ export default async function OrdenTrabajoDetallePage({
         visit_technicians (
           id,
           user_id,
-          profiles (
+          profiles!visit_technicians_user_id_fkey (
             id,
             full_name
           )

@@ -85,7 +85,7 @@ export default async function DashboardPage() {
       .from('user_roles')
       .select(`
         user_id,
-        profiles (
+        profiles!user_roles_user_id_fkey (
           id,
           full_name
         )
