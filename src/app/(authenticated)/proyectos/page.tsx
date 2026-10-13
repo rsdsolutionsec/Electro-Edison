@@ -145,7 +145,9 @@ export default async function ProyectosPage({
                     return (
                       <tr key={p.id} className="hover:bg-slate-50/80 transition-colors">
                         <td className="px-6 py-4 font-mono font-bold text-xs text-blue-700">
-                          {p.project_code}
+                          <Link href={`/proyectos/${p.id}`} className="hover:underline">
+                            {p.project_code}
+                          </Link>
                         </td>
                         <td className="px-6 py-4">
                           <Link

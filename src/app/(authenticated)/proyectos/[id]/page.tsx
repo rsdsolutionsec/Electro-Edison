@@ -26,9 +26,51 @@ export default async function ProyectoDetallePage({
   const { id } = await params
   const supabase = await createClient()
 
-  // Cargar expediente completo del proyecto
+  // Soportar tanto UUID como código de proyecto (ej: PRY-2026-0001)
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
+  let projectQuery = supabase
+    .from('projects')
+    .select(`
+      *,
+      clients (
+        id,
+        name,
+        phone,
+        email
+      ),
+      client_locations (
+        id,
+        address,
+        city,
+        reference
+      ),
+      responsible:profiles!projects_responsible_user_id_fkey (
+        id,
+        full_name
+      )
+    `)
+
+  if (isUuid) {
+    projectQuery = projectQuery.eq('id', id)
+  } else {
+    projectQuery = projectQuery.ilike('project_code', id)
+  }
+
+  const { data: project, error: projectError } = await projectQuery.maybeSingle()
+
+  if (projectError) {
+    console.error('[ProyectoDetallePage] Error al consultar proyecto:', projectError)
+  }
+
+  if (!project) {
+    notFound()
+  }
+
+  const projectId = project.id
+
+  // Cargar expediente completo con el UUID resuelto
   const [
-    { data: project, error: projectError },
     { data: quotations },
     { data: workOrders },
     { data: stages },
@@ -36,32 +78,9 @@ export default async function ProyectoDetallePage({
     { data: activityLogs },
   ] = await Promise.all([
     supabase
-      .from('projects')
-      .select(`
-        *,
-        clients (
-          id,
-          name,
-          phone,
-          email
-        ),
-        client_locations (
-          id,
-          address,
-          city,
-          reference
-        ),
-        responsible:profiles!projects_responsible_user_id_fkey (
-          id,
-          full_name
-        )
-      `)
-      .eq('id', id)
-      .single(),
-    supabase
       .from('quotations')
       .select('*')
-      .eq('project_id', id)
+      .eq('project_id', projectId)
       .order('version', { ascending: false }),
     supabase
       .from('work_orders')
@@ -83,29 +102,25 @@ export default async function ProyectoDetallePage({
           instructions
         )
       `)
-      .eq('project_id', id)
+      .eq('project_id', projectId)
       .order('created_at', { ascending: false }),
     supabase
       .from('project_stages')
       .select('*')
-      .eq('project_id', id)
+      .eq('project_id', projectId)
       .order('sequence', { ascending: true }),
     supabase
       .from('delivery_confirmations')
       .select('*')
-      .eq('project_id', id)
+      .eq('project_id', projectId)
       .order('confirmed_at', { ascending: false }),
     supabase
       .from('activity_logs')
       .select('*')
-      .eq('project_id', id)
+      .eq('project_id', projectId)
       .order('created_at', { ascending: false })
       .limit(10),
   ])
-
-  if (projectError || !project) {
-    notFound()
-  }
 
   const clientData = project.clients as any
   const locationData = project.client_locations as any

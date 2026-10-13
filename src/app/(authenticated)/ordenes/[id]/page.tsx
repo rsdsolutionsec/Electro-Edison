@@ -27,8 +27,10 @@ export default async function OrdenTrabajoDetallePage({
   const { id } = await params
   const supabase = await createClient()
 
-  // 1. Obtener la orden de trabajo con todas sus relaciones
-  const { data: workOrder, error } = await supabase
+  // 1. Obtener la orden de trabajo con todas sus relaciones (soporta UUID y order_number)
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
+  let workOrderQuery = supabase
     .from('work_orders')
     .select(`
       *,
@@ -91,10 +93,20 @@ export default async function OrdenTrabajoDetallePage({
         )
       )
     `)
-    .eq('id', id)
-    .single()
 
-  if (error || !workOrder) {
+  if (isUuid) {
+    workOrderQuery = workOrderQuery.eq('id', id)
+  } else {
+    workOrderQuery = workOrderQuery.ilike('order_number', id)
+  }
+
+  const { data: workOrder, error } = await workOrderQuery.maybeSingle()
+
+  if (error) {
+    console.error('[OrdenTrabajoDetallePage] Error al consultar orden de trabajo:', error)
+  }
+
+  if (!workOrder) {
     notFound()
   }
 

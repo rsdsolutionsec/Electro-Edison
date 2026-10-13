@@ -192,8 +192,10 @@ export default async function ClienteDetallePage({
                 <tbody className="divide-y divide-slate-100">
                   {projects.map((p: any) => (
                     <tr key={p.id} className="hover:bg-slate-50/80 transition-colors">
-                      <td className="px-6 py-4 font-mono font-bold text-xs text-slate-900">
-                        {p.project_code}
+                      <td className="px-6 py-4 font-mono font-bold text-xs text-blue-700">
+                        <Link href={`/proyectos/${p.id}`} className="hover:underline">
+                          {p.project_code}
+                        </Link>
                       </td>
                       <td className="px-6 py-4 font-semibold text-slate-900">
                         <Link href={`/proyectos/${p.id}`} className="hover:text-blue-600 transition-colors">

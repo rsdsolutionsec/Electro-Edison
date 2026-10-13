@@ -10,8 +10,10 @@ export default async function CotizacionDetallePage({
   const { id } = await params
   const supabase = await createClient()
 
-  // 1. Consultar la cotización con sus partidas y proyecto
-  const { data: quotation, error } = await supabase
+  // 1. Consultar la cotización con sus partidas y proyecto (soporta UUID y quotation_number)
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
+  let quotationQuery = supabase
     .from('quotations')
     .select(`
       *,
@@ -37,10 +39,20 @@ export default async function CotizacionDetallePage({
         )
       )
     `)
-    .eq('id', id)
-    .single()
 
-  if (error || !quotation) {
+  if (isUuid) {
+    quotationQuery = quotationQuery.eq('id', id)
+  } else {
+    quotationQuery = quotationQuery.ilike('quotation_number', id)
+  }
+
+  const { data: quotation, error } = await quotationQuery.maybeSingle()
+
+  if (error) {
+    console.error('[CotizacionDetallePage] Error al consultar cotización:', error)
+  }
+
+  if (!quotation) {
     notFound()
   }
 
